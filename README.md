@@ -1,2 +1,3 @@
-# clases-let
-Clase de ejemplo
+# Clases LET ejemplo
+
+Clase y materiales de ejemplo
