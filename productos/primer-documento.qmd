@@ -29,14 +29,15 @@ holhahola
 
 ```{r}
 #| message: false
+#| warning: false
 library(readr)
 library(dplyr)
 library(ggplot2)
 
-desarrollo <- read_csv("https://raw.githubusercontent.com/rivaquiroga/datos-de-ejemplo/main/cl_2000-2019.csv")
+desarrollo <- read_csv("https://raw.githubusercontent.com/rivaquiroga/datos-de-ejemplo/main/cl_1960-2020.csv")
 ```
 
-Estos son datos sobre Chile para las variables población, pib per cápita y esperanza de vida entre los años 2000 y 2019.
+Estos son datos sobre Chile para las variables población, pib per cápita y esperanza de vida entre los años `r min(desarrollo$anio)` y `r max(desarrollo$anio)`.
 
 ```{r}
 ggplot(desarrollo, aes(x = anio, y = pib)) +
@@ -49,7 +50,7 @@ Los datos del último año son los siguientes:
 
 ```{r}
 desarrollo |> 
-  filter(anio == 2019) |> 
+  filter(anio == max(desarrollo$anio)) |> 
   select("esperanza de vida" = esperanza_vida, pib, "población" = poblacion) |> 
   knitr::kable()
 ```
