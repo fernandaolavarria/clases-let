@@ -26,3 +26,30 @@ You can add options to executable code like this
 The `echo: false` option disables the printing of code (only output is displayed).
 
 holhahola
+
+```{r}
+#| message: false
+library(readr)
+library(dplyr)
+library(ggplot2)
+
+desarrollo <- read_csv("https://raw.githubusercontent.com/rivaquiroga/datos-de-ejemplo/main/cl_2000-2019.csv")
+```
+
+Estos son datos sobre Chile para las variables población, pib per cápita y esperanza de vida entre los años 2000 y 2019.
+
+```{r}
+ggplot(desarrollo, aes(x = anio, y = pib)) +
+  geom_line(size = 2, color = "#1fb791") +
+  scale_y_continuous(limits = c(0, 15000)) + 
+  theme_minimal()
+```
+
+Los datos del último año son los siguientes:
+
+```{r}
+desarrollo |> 
+  filter(anio == 2019) |> 
+  select("esperanza de vida" = esperanza_vida, pib, "población" = poblacion) |> 
+  knitr::kable()
+```
