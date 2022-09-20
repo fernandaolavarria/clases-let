@@ -1,0 +1,56 @@
+---
+title: "Reporte 2"
+format: 
+  html:
+    code-fold: true
+    code-summary: "código fuente"
+editor: visual
+lang: es
+params:
+  pais: "Ruanda"
+theme: superhero
+toc: true
+---
+
+Vamos a ver cómo importar datos que están en otro lugar de mi proyecto y cómo parametrizar reportes.
+
+## Los datos
+
+Primero se importarán los datos que se usarán para trabajar
+
+```{r}
+#| warning: false
+#| message: false
+library(readr)
+library(dplyr)
+library(ggplot2)
+
+desarrollo = read_csv(here::here("datos/datos-desarrollo.csv")) #here para que busque las cosas en mi proyecto general
+```
+
+## Esperanza de vida en el mundo
+
+La siguiente tabla muestra los datos sobre esperanza de vida según continente para el año 2020:
+
+```{r}
+desarrollo %>% 
+  filter(anio == 2020) %>% 
+  group_by(continente) %>% 
+  summarise(media = mean(esperanza_vida, na.rm = TRUE),
+            min = min(esperanza_vida, na.rm = TRUE),
+            max = max(esperanza_vida, na.rm = TRUE)) %>% 
+  knitr::kable()
+```
+
+## Datos sobre `r params$pais`
+
+En el caso de `r params$pais` , la esperanza de vida ha tenido una evolución que se muestra en el siguiente gráfico:
+
+```{r}
+desarrollo %>% 
+  filter(pais == params$pais) %>% 
+  ggplot(aes(x = anio, y = esperanza_vida)) + 
+  geom_line(size = 2) + 
+  scale_y_continuous(limits = c(0,85)) + 
+  theme_minimal() 
+```
