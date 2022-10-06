@@ -138,16 +138,59 @@ desarrollo %>%
   theme_bw() + 
   theme(plot.title = element_markdown())
 
+#Facetas: separar variables categóricas en gráficos (podría que los datos vistos completos hay una sola tendencia, pero vistos por separado tienen distintas tendencias)
 
+library(readr)
+library(dplyr)
+library(ggplot2)
+library(showtext)
+library(ggthemes)
 
+desarrollo = read_csv("datos/datos-desarrollo.csv")
 
+cada_cinco = desarrollo %>% 
+  group_by(pais) %>% 
+  filter(row_number()  %% 5 == 1)
 
+ggplot(cada_cinco, aes(pib, esperanza_vida, size = poblacion)) + 
+  geom_point(alpha = 0.2) + 
+  scale_x_log10(label = scales::dollar) + 
+  scale_y_continuous(limits = c(0,90), breaks = seq(0,80, by = 20)) + 
+  facet_wrap(vars(continente)) 
+  
 
+#Cómo modificar el "tema" (aspectos de un gráfico que no dependen de los datos).
 
+#cómo definir la fuente tipográfica (google fonts)
 
+font_add_google(name = "Lato", family = "Lato")
+showtext_auto()
 
-
-
+desarrollo %>% 
+  filter(pais %in% c("Argentina", "Chile", "Uruguay")) %>% 
+  ggplot(aes(anio, pib, color = pais)) +
+  geom_line(size = 1) + 
+  scale_color_colorblind() + #para daltonismo 
+  labs(title = "Evolución del PIB en Argentina, Chile y Uruguay",
+       x = NULL,
+       y = "PIB en dólares",
+       color = "Paises") +
+  theme_minimal() + #este se escribe primero para no borrar los cambios
+  theme(
+    text = element_text(family = "Lato"),
+    plot.title = element_text(size = 24),
+    axis.title.y = element_text(size = 15) , 
+    legend.position = "top",
+    legend.justification = "left",
+    legend.text = element_text(size = 14),
+    panel.grid.major.y = element_line(color = "gray40"),
+    panel.grid.minor.y = element_line(color = "purple"),
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor.x = element_blank(),
+    plot.background = element_rect(fill = "red"), #o panel.background
+    panel.background = element_rect(color = "green", size = 4,
+                                    fill = "pink")
+  )
 
 
 
